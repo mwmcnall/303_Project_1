@@ -22,11 +22,11 @@
 - No parenthesis functionality. 
 	- Refer to Infix_To_Postfix.cpp for how that was implemented (in Assignment 3 folder)
 - Current operators the class understands:
-	- +
-	- -
-	- /
-	- *
-	- %
+	- plus
+	- minus
+	- divide
+	- multiply
+	- modulus
 - No test cases implemented within main
 	- Meaning as we add functionality there's no guarantee something that worked in the past will continue to work
 - All test cases MUST have spaces between every operator and every number
