@@ -1,11 +1,11 @@
 # Evaluator
 
 ## Changes from original implementation
-	- Operators / Precedence are now stored in static const vectors
-		- Done because vectors are safer, also because OPERATORS now contains multi-digit characters (strings)
-	- switch / case done with an enum
-		- switch / case cannot be done with strings. enums are very readable in code as well
-	- is_operator and precedence methods re-written to deal with new vector storage method
+	* Operators / Precedence are now stored in static const vectors
+		* Done because vectors are safer, also because OPERATORS now contains multi-digit characters (strings)
+	* switch / case done with an enum
+		* switch / case cannot be done with strings. enums are very readable in code as well
+	* is_operator and precedence methods re-written to deal with new vector storage method
 
 ## Debug notes
 	- Remove any operator that you want to test on a given expression
