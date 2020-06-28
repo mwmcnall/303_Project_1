@@ -23,8 +23,7 @@
   * Finish by 6/30
 * Split a string with no spaces into arithmetic in numbers
   * Finish by 6/30
-* Create an Evaluator class where we can run test cases and see if the desired output matches the examples
-  * Evaluator eval. eval.eval()
+* Create the .eval() function
 * Error checking on invalid objectives
   * Create Syntax_Error class based off the one uploaded from Assignment 3
   * Be able to keep track of character that caused the error
