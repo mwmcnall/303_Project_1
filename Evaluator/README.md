@@ -3,7 +3,7 @@
 ## Changes from original implementation
 - Operators / Precedence are now stored in static const vectors
 	- Done because vectors are safer, also because OPERATORS now contains multi-digit characters (strings)
-	- Wes: Thinking more about this, if we want to implement evaluating character by character, we might be able to get away just sending x number of the same operator in a row? And then we can use the old implementation? lmk if y'all like that better and we can go back to the static const char *
+	- Wes: Thinking more about this, if we want to implement evaluating character by character, we might be able to get away just sensing x number of the same operator in a row? And then we can use the old implementation? lmk if y'all like that better and we can go back to the static const char *
 - switch / case done with an enum
 	- switch / case cannot be done with strings. enums are very readable in code as well
 	- is_operator and precedence methods re-written to deal with new vector storage method
