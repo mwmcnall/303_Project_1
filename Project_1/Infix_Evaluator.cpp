@@ -102,6 +102,9 @@ int Infix_Evaluator::eval_op(std::string op, int rhs) {
 		break;
 	case Divide: result = lhs / rhs;
 		break;
+	case Modulus: result = lhs % rhs;
+		break;
+	// TODO: Should have default case to throw error as it should never be reached
 	}
 
 	return result;
