@@ -56,28 +56,24 @@ private:
 	}
 
 	enum OP_OPTIONS {
-		/*
 		Logical_Not,
 		Prefix_Increment,
 		Prefix_Decrement,
 		Negative,
 		Power,
-		*/
 		Multiply,
 		Divide,
 		Modulus,
 		Plus,
 		Minus,
-		/*
 		Greater_Than,
-		Greather_Than_Equal,
+		Greater_Than_Equal,
 		Less_Than,
 		Less_Than_Equal,
 		Equal,
 		Not_Equal,
 		Logical_And,
 		Logical_Or
-		*/
 	};
 
 	static const std::vector<std::string> OPERATORS;
