@@ -85,6 +85,7 @@ private:
 	static const std::vector<std::string> OPERATORS;
 	static const std::vector<int> PRECEDENCE;
 	std::stack<int> operand_stack;
+	std::stack<string> operator_stack;
 };
 
 #endif // !INFIX_EVALUATOR_H_

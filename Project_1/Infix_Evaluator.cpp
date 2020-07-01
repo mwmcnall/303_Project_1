@@ -38,6 +38,69 @@ const std::vector<int> Infix_Evaluator::PRECEDENCE = {
 	-1, -1, -1, -1, -1, -1
 };
 
+void Infix_Evaluator::process_operator(std::string op) {
+	if (operator_stack.empty() || (op == "(") || (op == "[") || (op == "{")) {
+		if (op == ")" || op == "]" || op == "}")
+			// throw Syntax_Error("Unmatched close parenthesis");
+		operator_stack.push(op);
+	}
+	else {
+		if (precedence(op) > precedence(operator_stack.top())) {
+			operator_stack.push(op);
+		}
+		else {
+			// Pop all stacked operators with equal
+			// or higher precedence than op.
+			while (!operator_stack.empty()
+				&& (operator_stack.top() != "(")
+				&& (operator_stack.top() != "[")
+				&& (operator_stack.top() != "{")
+				&& (precedence(op) <= precedence(operator_stack.top()))) {
+				postfix += operator_stack.top(); // needs adapted
+				postfix += " "; // need adapted
+				operator_stack.pop();
+			}
+			// assert: Operator stack is empty or 
+			//         top of stack is '(' or current
+			//         operator precedence > top of stack operator
+			//         precedence;
+			if (op == ")") {
+				if (!operator_stack.empty()
+					&& (operator_stack.top() == "(")) {
+					operator_stack.pop();
+				}
+				else {
+					// throw Syntax_Error("Unmatched close parentheses");
+				}
+			}
+			else if (op == "]") {
+				if (!operator_stack.empty()
+					&& (operator_stack.top() == "[")) {
+					operator_stack.pop();
+				}
+				else {
+					// throw Syntax_Error("Unmatched close parentheses");
+				}
+			}
+			else if (op == "}") {
+				if (!operator_stack.empty()
+					&& (operator_stack.top() == "{")) {
+					operator_stack.pop();
+				}
+				else {
+					// throw Syntax_Error("Unmatched close parentheses");
+				}
+			}
+			else {
+				operator_stack.push(op);
+			}
+		}
+	}
+}
+
+}
+
+
 // Evaluates an infix expression
 int Infix_Evaluator::eval(const std::string& expression) {
 	// Be sure the stack is empty
