@@ -11,7 +11,7 @@ int main() {
 
 	Infix_Evaluator eval;
 	// Or you can input custom test cases here!
-	int result = eval.eval("10 % 5");
+	int result = eval.eval("3&&&& 5");
 
 	cout << result;
 
