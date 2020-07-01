@@ -5,7 +5,7 @@
 * Implement precedence (Zach)
 * Add error checking on switch case default
 * Implement Error Checking (Wes)
-  * Along with how to find where the error occurred
+  * Along with how to find where the error occurred (Wes)
 
 ## Project Goals
 * Using stacks, write an infix expression parser
