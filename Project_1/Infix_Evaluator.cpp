@@ -45,7 +45,8 @@ int Infix_Evaluator::eval(const std::string& expression) {
 	// Process each token
 	istringstream tokens(expression);
 	char next_char;
-	bool was_last_digit = false; //false if previous character was an operator, true if it was a number
+	//false if previous character was an operator, true if it was a number
+	bool was_last_digit = false; 
 	while (tokens >> next_char) {
 		// Digit found
 		
