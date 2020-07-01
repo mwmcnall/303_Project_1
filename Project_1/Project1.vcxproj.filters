@@ -24,12 +24,18 @@
     <ClCompile Include="Syntax_Error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Test_Evaluator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Infix_Evaluator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Syntax_Error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Evaluator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
