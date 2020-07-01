@@ -2,8 +2,8 @@
 #include <iostream>
 #include <sstream>
 #include <cctype>
-#include <regex> // For error checking
 #include <string>
+#include <cmath>
 using std::stack;
 using std::string;
 using std::istringstream;
@@ -41,14 +41,21 @@ const std::vector<int> Infix_Evaluator::PRECEDENCE = {
 	0, 0, 0
 };
 
+// Constructor, instantiates all regex statements so they are only run once
+Infix_Evaluator::Infix_Evaluator() {
+	this->multi_op = std::regex(multi_operator_regex_builder());
+	this->multi_operands = std::regex("(\\d+)(\\s+)(\\d+)");
+	this->unary_binary = std::regex(unary_binary_regex_builder());
+	this->div_zero = std::regex("(\\/)(\\s*)(0)");
+}
+
+// Creates the or syntax for a regex statement to look for operators within a statement appropriately
 void Infix_Evaluator::regex_or_buildler(std::string& regex_statement, const std::vector<std::string>& vec,
-	std::string end_line, int repeat = 1) {
+	std::string end_line) {
 
 	for (std::string s : vec) {
 		// Separate each double_op with an or signifier
-		for (int i = 0; i < repeat; i++)
-			regex_statement += s;
-		regex_statement += "|";
+		regex_statement += s + "{1}|";
 	}
 	// Remove last |
 	regex_statement.pop_back();
@@ -58,30 +65,34 @@ void Infix_Evaluator::regex_or_buildler(std::string& regex_statement, const std:
 	return;
 }
 
-// TODO: Make this idempotent
+// Returns a regex statement that looks for multiple operators in a row
+// Works with and without spaces by utilizing or statements
 std::string Infix_Evaluator::multi_operator_regex_builder() {
 	// Checking for multiple operators in a row is a regex statement that follows a pattern
 	// Meaning we can build for a checker using operators
-	std::string regex_statement = "[";
-
-	// We need to escape certain characters for regex
-	const std::vector<std::string> double_ops = {"&", "\\|", "+", "\\-", "="};
-	// Four in row of double_ops
-	regex_or_buildler(regex_statement, double_ops, "]{4}|[");
-	// Two two in a row of double_ops with spaces
-	// e.g. && &&
-	regex_or_buildler(regex_statement, double_ops, "]{2}\\s+[", 2);
-	regex_or_buildler(regex_statement, double_ops, "]{2}|[", 2);
+	std::string regex_statement = "(";
 
 	// Operators where it's bad to see them repeated twice in a row
-	const std::vector<std::string> repeat_twice = { "!", "^", "*", "/", "%", "<", "<=", ">", ">=", "==", "!="};
-	// repeat_twice with no spaces
-	regex_or_buildler(regex_statement, repeat_twice, "]{2}|[");
-
-	// Now with spaces
-	regex_or_buildler(regex_statement, repeat_twice, "]{1}\\s[", 2);
+	const std::vector<std::string> repeat_twice = { "&&", "\\|\\|", "\\+\\+", "\\-\\-",
+		"!", "\\^", "\\*", "\\/", "%", 
+		"<", "<=", ">", ">=", "==", "!="};
+	regex_or_buildler(regex_statement, repeat_twice, "){1}(\\s*)(");
 	// Last thing to add to statement, no | or new [
-	regex_or_buildler(regex_statement, repeat_twice, "]{1}", 2);
+	regex_or_buildler(regex_statement, repeat_twice, "){1}");
+
+	return regex_statement;
+}
+
+// Create a regex statement that checks for a binary operator following a unary operator
+std::string Infix_Evaluator::unary_binary_regex_builder() {
+	std::string regex_statement = "(";
+
+	const std::vector<std::string> unary_ops = { "\\+", "\\+\\+", "\\-", "\\-\\-", "!", "=" };
+	const std::vector<std::string> binary_ops = { "\\*", "%", "\\/", 
+		"<", "<=", ">", ">=", "==", "!=", "&&", "\\|\\|" };
+
+	regex_or_buildler(regex_statement, unary_ops, "){1}(\\s*)(");
+	regex_or_buildler(regex_statement, binary_ops, "){1}");
 
 	return regex_statement;
 }
@@ -97,24 +108,37 @@ void Infix_Evaluator::error_checking(const std::string& expression) {
 	if (std::count(BINARY_OPS.begin(), BINARY_OPS.end(), first_two))
 		throw Syntax_Error("Expression can't start with a binary operator @ char: 0");
 
-	// Error Checking Multiple of the same operands in a row
-	std::regex multi_op(multi_operator_regex_builder());
 	std::smatch match;
+	// A unary operator followed by a binary operator
+	if (std::regex_search(expression, match, unary_binary)) {
+		int pos = expression.find(match.str()) + match[1].length() + match[2].length();
+		throw Syntax_Error("A unary operator can't be followed by a binary operator @ char: " + std::to_string(pos));
+	}
+
+	// Error Checking Multiple of the same operands in a row
 	if (std::regex_search(expression, match, multi_op)) {
 		// match[0] is the entire expression. We add half of it to pos because we're dealing with two
 		// sets of matched expressions
-		int pos = expression.find(match.str()) + match[0].length()/2;
+		int pos = expression.find(match.str()) + std::ceil(match[0].length()/2.0);
 		throw Syntax_Error("Two binary operators in a row @ char: " + std::to_string(pos));
 	}
 
 	// Error Checking Multiple Operands in a row
 	// () represent three different capture groups in regex
-	std::regex multi_operands("(\\d+)(\\s+)(\\d+)");
 	if (std::regex_search(expression, match, multi_operands)) {
 		// Adds both match[1] and match[2] length to find the position of the third capture group
 		// Done this way to avoid possibility of third capture group matching earlier in the expression
 		int pos = expression.find(match.str()) + match[1].length() + match[2].length();
 		throw Syntax_Error("Two operands in a row @ char: " + std::to_string(pos));
+	}
+
+	//(\/)(\s*)(0)
+	// Division by Zero
+	if (std::regex_search(expression, match, div_zero)) {
+		// Adds both match[1] and match[2] length to find the position of the third capture group
+		// Done this way to avoid possibility of third capture group matching earlier in the expression
+		int pos = expression.find(match.str()) + match[1].length() + match[2].length();
+		throw Syntax_Error("Division by zero @ char: " + std::to_string(pos));
 	}
 
 	return;

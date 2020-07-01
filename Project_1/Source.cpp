@@ -7,11 +7,11 @@ using namespace std;
 int main() {
 	// The constructor calls all test cases
 	// Go into Test_Evaluator.cpp to comment in / out test cases you wish to test
-	//Test_Evaluator test_evals;
+	Test_Evaluator test_evals;
 
 	Infix_Evaluator eval;
 	// Or you can input custom test cases here!
-	int result = eval.eval("3^^5");
+	int result = eval.eval("3&&&& 5");
 
 	cout << result;
 
