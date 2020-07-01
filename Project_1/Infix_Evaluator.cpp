@@ -19,7 +19,8 @@ const std::vector<std::string> Infix_Evaluator::OPERATORS = {
 	"==", "!=", 
 	"&&", 
 	"||",
-	"&", "|", "="
+	"&", "|", "=",
+	"(", ")", "[", "]", "{", "}"
 };
 const std::vector<int> Infix_Evaluator::PRECEDENCE = {
 	8, 
@@ -33,7 +34,8 @@ const std::vector<int> Infix_Evaluator::PRECEDENCE = {
 	3, 3, 
 	2, 
 	1,
-	0, 0, 0
+	0, 0, 0,
+	-1, -1, -1, -1, -1, -1
 };
 
 // Evaluates an infix expression
@@ -179,7 +181,7 @@ int Infix_Evaluator::eval(const std::string& expression) {
 			}
 
 
-			else if (is_operator(std::string(1, next_char))) {
+			else if (is_operator(std::string(1, next_char))) { // hasn't this condition already been tested by this point?
 				string ops;
 				ops = (std::string(1, op) + std::string(1, next_char));
 				tokens >> next_char;
@@ -264,6 +266,18 @@ int Infix_Evaluator::eval_op(std::string op, int rhs) {
 	case Logical_And: result = (lhs && rhs);
 		break;
 	case Logical_Or: result = (lhs || rhs);
+		break;
+	case Open_Parenthesis:
+		break;
+	case Close_Parenthesis:
+		break;
+	case Open_Bracket:
+		break;
+	case Close_Bracket:
+		break;
+	case Open_Brace:
+		break;
+	case Close_Brace:
 		break;
 	// TODO: Should have default case to throw error as it should never be reached
 	}

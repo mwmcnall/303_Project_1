@@ -73,7 +73,13 @@ private:
 		Equal,
 		Not_Equal,
 		Logical_And,
-		Logical_Or
+		Logical_Or,
+		Open_Parenthesis,
+		Close_Parenthesis,
+		Open_Bracket,
+		Close_Bracket,
+		Open_Brace,
+		Close_Brace
 	};
 
 	static const std::vector<std::string> OPERATORS;
