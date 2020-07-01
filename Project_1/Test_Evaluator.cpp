@@ -4,7 +4,7 @@ Test_Evaluator::Test_Evaluator() {
 	Test_Spaces();
 	Test_No_Spaces();
 	// Commented out not to fill up terminal with error messages
-	//Test_Errors();
+	// Test_Errors();
 }
 
 void Test_Evaluator::Test_Spaces() {
