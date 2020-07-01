@@ -141,10 +141,12 @@
     <ClCompile Include="Infix_Evaluator.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Syntax_Error.cpp" />
+    <ClCompile Include="Test_Evaluator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Infix_Evaluator.h" />
     <ClInclude Include="Syntax_Error.h" />
+    <ClInclude Include="Test_Evaluator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
