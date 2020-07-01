@@ -92,10 +92,10 @@ void Infix_Evaluator::error_checking(const std::string& expression) {
 	if (std::count(CLOSING_PARENS.begin(), CLOSING_PARENS.end(), first))
 		throw Syntax_Error("Expression can't start with a closing parenthesis @ char: 0");
 	else if (first == '<' || first == '>')
-		throw Syntax_Error("Expression can't start with a closing parenthesis @ char: 0");
+		throw Syntax_Error("Expression can't start with a binary operator @ char: 0");
 	std::string first_two = expression.substr(0, 2);
 	if (std::count(BINARY_OPS.begin(), BINARY_OPS.end(), first_two))
-		throw Syntax_Error("Expression can't start with a closing parenthesis @ char: 0");
+		throw Syntax_Error("Expression can't start with a binary operator @ char: 0");
 
 	// Error Checking Multiple of the same operands in a row
 	std::regex multi_op(multi_operator_regex_builder());
