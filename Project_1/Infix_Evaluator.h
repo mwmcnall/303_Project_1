@@ -55,6 +55,12 @@ private:
 			return -1;
 	}
 
+	void error_checking(const std::string& expression);
+
+	std::string multi_operator_regex_builder();
+	void regex_or_buildler(std::string &regex_statement, const std::vector<std::string> &vec,
+		std::string end_line, int repeat);
+
 	enum OP_OPTIONS {
 		Logical_Not,
 		Prefix_Increment,

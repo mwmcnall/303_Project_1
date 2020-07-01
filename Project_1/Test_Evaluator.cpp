@@ -1,9 +1,9 @@
 #include "Test_Evaluator.h"
 
 Test_Evaluator::Test_Evaluator() {
-	Test_Spaces();
+//	Test_Spaces();
 //	Test_No_Spaces();
-//	Test_Errors();
+	Test_Errors();
 }
 
 void Test_Evaluator::Test_Spaces() {
@@ -138,6 +138,7 @@ void Test_Evaluator::Test_Errors() {
 	assert(evaluator.eval("3&&&& 5"), "Two binary operators in a row @ char: 3");
 	// Two operands in a row
 	assert(evaluator.eval("15+3 2"), "Two operands in a row @ char: 5");
+
 	// A unary operand followed by a binary operator
 	assert(evaluator.eval("10+ ++<3"), "A unary operator can't be followed by a binary operator @ char: 6");
 	// Division by zero

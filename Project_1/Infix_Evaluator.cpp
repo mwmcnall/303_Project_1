@@ -2,10 +2,15 @@
 #include <iostream>
 #include <sstream>
 #include <cctype>
+#include <regex> // For error checking
+#include <string>
 using std::stack;
 using std::string;
 using std::istringstream;
 using std::isdigit;
+
+const std::vector<char> CLOSING_PARENS = { '}',')',']' };
+const std::vector<std::string> BINARY_OPS = { "<", "<=", ">", ">=", "==", "!=", "&&", "||"};
 
 const std::vector<std::string> Infix_Evaluator::OPERATORS = {
 	"!", 
@@ -36,8 +41,100 @@ const std::vector<int> Infix_Evaluator::PRECEDENCE = {
 	0, 0, 0
 };
 
+void Infix_Evaluator::regex_or_buildler(std::string& regex_statement, const std::vector<std::string>& vec,
+	std::string end_line, int repeat = 1) {
+
+	for (std::string s : vec) {
+		// Separate each double_op with an or signifier
+		for (int i = 0; i < repeat; i++)
+			regex_statement += s;
+		regex_statement += "|";
+	}
+	// Remove last |
+	regex_statement.pop_back();
+
+	regex_statement += end_line;
+
+	return;
+}
+
+// TODO: Make this idempotent
+std::string Infix_Evaluator::multi_operator_regex_builder() {
+	// Checking for multiple operators in a row is a regex statement that follows a pattern
+	// Meaning we can build for a checker using operators
+	std::string regex_statement = "[";
+
+	// We need to escape certain characters for regex
+	const std::vector<std::string> double_ops = {"&", "\\|", "+", "\\-", "="};
+	// Four in row of double_ops
+	regex_or_buildler(regex_statement, double_ops, "]{4}|[");
+	// Two two in a row of double_ops with spaces
+	// e.g. && &&
+	regex_or_buildler(regex_statement, double_ops, "]{2}\\s+[", 2);
+	regex_or_buildler(regex_statement, double_ops, "]{2}|[", 2);
+
+	// Operators where it's bad to see them repeated twice in a row
+	const std::vector<std::string> repeat_twice = { "!", "^", "*", "/", "%", "<", "<=", ">", ">=", "==", "!="};
+	// repeat_twice with no spaces
+	regex_or_buildler(regex_statement, repeat_twice, "]{2}|[");
+
+	// Now with spaces
+	regex_or_buildler(regex_statement, repeat_twice, "]{1}\\s[", 2);
+	// Last thing to add to statement, no | or new [
+	regex_or_buildler(regex_statement, repeat_twice, "]{1}", 2);
+
+	return regex_statement;
+}
+
+void Infix_Evaluator::error_checking(const std::string& expression) {
+	// Error Checking first element of expression
+	char first = expression[0];
+	if (std::count(CLOSING_PARENS.begin(), CLOSING_PARENS.end(), first))
+		throw Syntax_Error("Expression can't start with a closing parenthesis @ char: 0");
+	else if (first == '<' || first == '>')
+		throw Syntax_Error("Expression can't start with a closing parenthesis @ char: 0");
+	std::string first_two = expression.substr(0, 2);
+	if (std::count(BINARY_OPS.begin(), BINARY_OPS.end(), first_two))
+		throw Syntax_Error("Expression can't start with a closing parenthesis @ char: 0");
+
+	// Error Checking Multiple of the same operands in a row
+	std::regex multi_op(multi_operator_regex_builder());
+	std::smatch match;
+	if (std::regex_search(expression, match, multi_op)) {
+		// match[0] is the entire expression. We add half of it to pos because we're dealing with two
+		// sets of matched expressions
+		int pos = expression.find(match.str()) + match[0].length()/2;
+		throw Syntax_Error("Two binary operators in a row @ char: " + std::to_string(pos));
+	}
+
+	// Error Checking Multiple Operands in a row
+	// () represent three different capture groups in regex
+	std::regex multi_operands("(\\d+)(\\s+)(\\d+)");
+	if (std::regex_search(expression, match, multi_operands)) {
+		// Adds both match[1] and match[2] length to find the position of the third capture group
+		// Done this way to avoid possibility of third capture group matching earlier in the expression
+		int pos = expression.find(match.str()) + match[1].length() + match[2].length();
+		throw Syntax_Error("Two operands in a row @ char: " + std::to_string(pos));
+	}
+
+	return;
+}
+
 // Evaluates an infix expression
 int Infix_Evaluator::eval(const std::string& expression) {
+
+	try
+	{
+		error_checking(expression);
+	}
+	catch (const std::exception& e)
+	{
+		// Output error message and return from function
+		// Does NOT evaluate expression
+		std::cout << e.what() << std::endl;
+		return -1;
+	}
+
 	// Be sure the stack is empty
 	while (!operand_stack.empty())
 		operand_stack.pop();
