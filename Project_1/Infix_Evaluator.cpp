@@ -38,10 +38,12 @@ const std::vector<int> Infix_Evaluator::PRECEDENCE = {
 	-1, -1, -1, -1, -1, -1
 };
 
+
 void Infix_Evaluator::process_operator(std::string op) {
 	if (operator_stack.empty() || (op == "(") || (op == "[") || (op == "{")) {
-		if (op == ")" || op == "]" || op == "}")
+		if (op == ")" || op == "]" || op == "}") {
 			// throw Syntax_Error("Unmatched close parenthesis");
+		}
 		operator_stack.push(op);
 	}
 	else {
@@ -56,8 +58,7 @@ void Infix_Evaluator::process_operator(std::string op) {
 				&& (operator_stack.top() != "[")
 				&& (operator_stack.top() != "{")
 				&& (precedence(op) <= precedence(operator_stack.top()))) {
-				postfix += operator_stack.top(); // needs adapted
-				postfix += " "; // need adapted
+				precedence_stack.push(operator_stack.top()); 
 				operator_stack.pop();
 			}
 			// assert: Operator stack is empty or 
@@ -70,7 +71,7 @@ void Infix_Evaluator::process_operator(std::string op) {
 					operator_stack.pop();
 				}
 				else {
-					// throw Syntax_Error("Unmatched close parentheses");
+					// throw Syntax_Error("Unmatched close parentheses"); --> update to match Wes's implementation
 				}
 			}
 			else if (op == "]") {
@@ -79,7 +80,7 @@ void Infix_Evaluator::process_operator(std::string op) {
 					operator_stack.pop();
 				}
 				else {
-					// throw Syntax_Error("Unmatched close parentheses");
+					// throw Syntax_Error("Unmatched close parentheses"); --> update to match Wes's implementation
 				}
 			}
 			else if (op == "}") {
@@ -88,7 +89,7 @@ void Infix_Evaluator::process_operator(std::string op) {
 					operator_stack.pop();
 				}
 				else {
-					// throw Syntax_Error("Unmatched close parentheses");
+					// throw Syntax_Error("Unmatched close parentheses"); --> update to match Wes's implementation
 				}
 			}
 			else {
@@ -96,8 +97,6 @@ void Infix_Evaluator::process_operator(std::string op) {
 			}
 		}
 	}
-}
-
 }
 
 
@@ -122,6 +121,7 @@ int Infix_Evaluator::eval(const std::string& expression) {
 			was_last_digit = true;
 		}
 
+		/*
 		else if (next_char == '!') {
 			char op = next_char;
 			tokens >> next_char;
@@ -218,7 +218,8 @@ int Infix_Evaluator::eval(const std::string& expression) {
 			// TODO: eval_op will FAIL if it detects another operator in a row
 			char op = next_char;
 			tokens >> next_char;
-
+			std::string str_op(1, op);
+			process_operator(str_op);
 		
 		
 			if (op == '-' && isdigit(next_char) && was_last_digit == false) {
@@ -329,18 +330,6 @@ int Infix_Evaluator::eval_op(std::string op, int rhs) {
 	case Logical_And: result = (lhs && rhs);
 		break;
 	case Logical_Or: result = (lhs || rhs);
-		break;
-	case Open_Parenthesis:
-		break;
-	case Close_Parenthesis:
-		break;
-	case Open_Bracket:
-		break;
-	case Close_Bracket:
-		break;
-	case Open_Brace:
-		break;
-	case Close_Brace:
 		break;
 	// TODO: Should have default case to throw error as it should never be reached
 	}

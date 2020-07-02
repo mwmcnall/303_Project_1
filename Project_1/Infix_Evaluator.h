@@ -74,18 +74,13 @@ private:
 		Not_Equal,
 		Logical_And,
 		Logical_Or,
-		Open_Parenthesis,
-		Close_Parenthesis,
-		Open_Bracket,
-		Close_Bracket,
-		Open_Brace,
-		Close_Brace
 	};
 
 	static const std::vector<std::string> OPERATORS;
 	static const std::vector<int> PRECEDENCE;
 	std::stack<int> operand_stack;
-	std::stack<string> operator_stack;
+	std::stack<std::string> operator_stack;
+	std::stack<std::string> precedence_stack;
 };
 
 #endif // !INFIX_EVALUATOR_H_
