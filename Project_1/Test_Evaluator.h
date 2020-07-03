@@ -13,6 +13,7 @@ public:
 private: // Variables
 	Infix_Evaluator evaluator;
 private: // Methods
+	void Test_Precedence();
 	void Test_Spaces();
 	void Test_No_Spaces();
 	void Test_Errors();

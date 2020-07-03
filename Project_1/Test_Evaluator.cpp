@@ -1,10 +1,24 @@
 #include "Test_Evaluator.h"
 
 Test_Evaluator::Test_Evaluator() {
+	Test_Precedence();
 	Test_Spaces();
 	Test_No_Spaces();
 	// Commented out not to fill up terminal with error messages
-	// Test_Errors();
+	Test_Errors();
+}
+
+void Test_Evaluator::Test_Precedence() {
+
+	assert(evaluator.eval("1+2*3") == 7);
+	assert(evaluator.eval("2+2^2*3") == 14);
+	assert(evaluator.eval("1==2") == 0);
+	assert(evaluator.eval("1+3 > 2") == 1);
+	assert(evaluator.eval("(4>=4) && 0") == 0);
+	//assert(evaluator.eval("(1+2)*3") == 9);
+	//assert(evaluator.eval("++++2-5*(3^2)") == -41);
+
+	return;
 }
 
 void Test_Evaluator::Test_Spaces() {
@@ -18,7 +32,7 @@ void Test_Evaluator::Test_Spaces() {
 void Test_Evaluator::Test_Prefix_Operators_Spaces() {
 
 	// !
-	assert(evaluator.eval("! 1") == false);
+	assert(evaluator.eval("! 1") == 0);
 	// ++
 	assert(evaluator.eval("++ 2") == 3);
 	// -- FAILS
@@ -48,21 +62,21 @@ void Test_Evaluator::Test_Combo_Operators_Spaces() {
 
 void Test_Evaluator::Test_Boolean_Operators_Spaces() {
 	// >
-	assert(evaluator.eval("6 > 5") == true);
+	assert(evaluator.eval("6 > 5") == 1);
 	// >=
-	assert(evaluator.eval("6 >= 5") == true);
+	assert(evaluator.eval("6 >= 5") == 1);
 	// <
-	assert(evaluator.eval("6 < 5") == false);
+	assert(evaluator.eval("6 < 5") == 0);
 	// <=
-	assert(evaluator.eval("6 <= 5") == false);
+	assert(evaluator.eval("6 <= 5") == 0);
 	// ==
-	assert(evaluator.eval("6 == 5") == false);
+	assert(evaluator.eval("6 == 5") == 0);
 	// !=
-	assert(evaluator.eval("6 != 5") == true);
+	assert(evaluator.eval("6 != 5") == 1);
 	// &&
-	assert(evaluator.eval("6 > 5 && 4 > 5") == false);
+	assert(evaluator.eval("6 > 5 && 4 > 5") == 0);
 	// ||
-	assert(evaluator.eval("1 || 0") == true);
+	assert(evaluator.eval("1 || 0") == 1);
 
 	return;
 }
@@ -78,7 +92,7 @@ void Test_Evaluator::Test_No_Spaces() {
 void Test_Evaluator::Test_Prefix_Operators_No_Spaces() {
 
 	// !
-	assert(evaluator.eval("!1") == false);
+	assert(evaluator.eval("!1") == 0);
 	// ++
 	assert(evaluator.eval("++2") == 3);
 	// --
