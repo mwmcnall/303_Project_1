@@ -6,25 +6,28 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <sstream>
 #include <regex> // For error checking
 #include "Syntax_Error.h"
+
+using std::istringstream;
 
 class Infix_Evaluator
 {
 public:
 	Infix_Evaluator();
-	// Evaluates a postfix expression
+	// Evaluates a postfix expression, the wrapper function
 	int eval(const std::string& expression);
 private:
+
+	// Recursive expression solver
+	int expression_evaluator(istringstream& tokens, const std::string& expression,
+		std::stack<int> operand_stack, std::stack<std::string> operator_stack,
+		int last_precedence = -2, int expression_position = 0);
+
 	// Evaluates the current operator
 	// Pops the two operands off the operand stack and applies the operator
-	int eval_op(std::string op, int rhs);
-
-	/** Function to process operators.
-		@param op The operator
-		@throws Syntax_Error
-	*/
-	void process_operator(std::string op);
+	int eval_op(std::string op, int rhs, std::stack<int>& operand_stack);
 
 	// Returns true if string is only digits
 	bool is_digits(const std::string& str) {
@@ -88,7 +91,6 @@ private:
 
 	static const std::vector<std::string> OPERATORS;
 	static const std::vector<int> PRECEDENCE;
-	std::stack<int> operand_stack;
 };
 
 #endif // !INFIX_EVALUATOR_H_
