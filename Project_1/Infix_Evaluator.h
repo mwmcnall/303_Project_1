@@ -22,6 +22,9 @@ private: // Variables
 
 	Error_Checker error_checker;
 
+	static const int INITIAL_PRECEDENCE = -3;
+	static const int PRECEDENCE_RECURSION = 9;
+
 	static const std::vector<std::string> OPERATORS;
 
 	enum OP_OPTIONS {
@@ -49,7 +52,7 @@ private: // Methods
 	// Recursive expression solver
 	int expression_evaluator(istringstream& tokens, const std::string& expression,
 		std::stack<int> operand_stack, std::stack<std::string> operator_stack,
-		int last_precedence = -2, int expression_position = 0);
+		int& expression_position, int last_precedence = INITIAL_PRECEDENCE);
 
 	// Evaluates the current operator
 	// Pops the two operands off the operand stack and applies the operator
@@ -59,14 +62,6 @@ private: // Methods
 	int operator_position(std::string op) {
 		auto it = std::find(OPERATORS.begin(), OPERATORS.end(), op);
 		return it - OPERATORS.begin();
-	}
-
-	// Determines whether a character is an operator
-	bool is_operator(std::string op) const {
-		if (std::find(OPERATORS.begin(), OPERATORS.end(), op) != OPERATORS.end())
-			return true;
-		else
-			return false;
 	}
 };
 

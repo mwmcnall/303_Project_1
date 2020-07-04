@@ -12,25 +12,9 @@ int main() {
 	Infix_Evaluator eval;
 	// Or you can input custom test cases here!
 	int result;
-	/*
-	result = eval.eval("1+2*3");
-	cout << result << endl << endl;
 
-	result = eval.eval("2+2^2*3");
+	result = eval.eval("++ 2");
 	cout << result << endl << endl;
-	
-	result = eval.eval("1==2");
-	cout << result << endl << endl;
-	
-	result = eval.eval("1+3 > 2");
-	cout << result << endl << endl;
-
-	result = eval.eval("(4>=4) && 0");
-	cout << result << endl << endl;
-	*/
-
-	//result = eval.eval("++++2-5*(3^2)");
-	//cout << result << endl << endl;
 
 	// To prevent program from closing so you can read test output
 	cin.get();

@@ -15,8 +15,8 @@ void Test_Evaluator::Test_Precedence() {
 	assert(evaluator.eval("1==2") == 0);
 	assert(evaluator.eval("1+3 > 2") == 1);
 	assert(evaluator.eval("(4>=4) && 0") == 0);
-	//assert(evaluator.eval("(1+2)*3") == 9);
-	//assert(evaluator.eval("++++2-5*(3^2)") == -41);
+	assert(evaluator.eval("(1+2)*3") == 9);
+	assert(evaluator.eval("++++2-5*(3^2)") == -41);
 
 	return;
 }
