@@ -11,9 +11,10 @@ int main() {
 
 	Infix_Evaluator eval;
 	// Or you can input custom test cases here!
-	int result = eval.eval("3&&&& 5");
+	int result;
 
-	cout << result;
+	result = eval.eval("++ 2");
+	cout << result << endl << endl;
 
 	// To prevent program from closing so you can read test output
 	cin.get();
