@@ -84,6 +84,8 @@ int Infix_Evaluator::expression_evaluator(istringstream& tokens, const std::stri
 			continue;
 		}
 
+
+
 		// TODO: Make a template function for finding item in vector
 		// Check if possible double operator
 		if (std::find(std::begin(POSSIBLE_DOUBLE_OP), std::end(POSSIBLE_DOUBLE_OP), next_char) != std::end(POSSIBLE_DOUBLE_OP)) {
@@ -239,7 +241,7 @@ int Infix_Evaluator::eval_op(std::string op, int rhs, std::stack<int>& operand_s
 	case Logical_Or: result = (lhs || rhs);
 		break;
 	default:
-		throw Syntax_Error("Unexpected Operand found :" + op);
+		throw "Unexpected operand found : " + op;
 	}
 
 	return result;
