@@ -8,14 +8,14 @@ using namespace std;
 int main() {
 	// The constructor calls all test cases
 	// Go into Test_Evaluator.cpp to comment in / out test cases you wish to test
-	//Test_Evaluator test_evals;
+	// Test_Evaluator test_evals;
 
 	Infix_Evaluator eval;
 	// Or you can input custom test cases here!
 	int result;
 
 	try {
-		result = eval.eval("1$2");
+		result = eval.eval("6+7+8");
 	}
 
 	catch (string myError) {

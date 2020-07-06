@@ -64,7 +64,7 @@ int Infix_Evaluator::expression_evaluator(istringstream& tokens, const std::stri
 	bool double_op = false;
 	char next_char;
 	std::string curr_op;
-	int curr_precedence;
+	int curr_precedence = -99;
 
 	// Process each token
 	while (tokens >> next_char) {
@@ -96,7 +96,12 @@ int Infix_Evaluator::expression_evaluator(istringstream& tokens, const std::stri
 				curr_op = std::string() + next_char;
 				last_precedence = precedence_map[curr_op];
 				operator_stack.push(curr_op);
-				continue;
+				// If last operator same precedence as current operator, let it fall through to
+				// if statements below for correct operatrion
+				if (last_precedence != curr_precedence) {
+					curr_precedence = precedence_map[curr_op];
+					continue;
+				}
 			}
 			else { // Double operand, set flag
 				double_op = true;
@@ -188,7 +193,8 @@ int Infix_Evaluator::expression_evaluator(istringstream& tokens, const std::stri
 	// Expression already solved, return answer
 	if (operand_stack.empty() && operator_stack.empty())
 		return temp_operand;
-	return eval_op(operator_stack.top(), temp_operand, operand_stack);
+	operand_stack.push(eval_op(operator_stack.top(), temp_operand, operand_stack));
+	return operand_stack.top();
 }
 
 // Evaluates the current operator
