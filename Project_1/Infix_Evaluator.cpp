@@ -12,7 +12,6 @@ const char POSSIBLE_DOUBLE_OP[] = { '!', '+', '-', '>', '<', '=', '&', '|'};
 const std::vector<std::string> Infix_Evaluator::OPERATORS = { "!",  "++", "--", "-", "^", 
 	"*", "/", "%", "+", "-", ">", ">=", "<", "<=", "==", "!=", "&&", "||" };
 
-// Negative / minus is a special case, not in map
 std::map<std::string, int> precedence_map = {
 	{"!", 8}, {"++", 8}, {"--", 8},
 	{"^", 7},
@@ -44,13 +43,12 @@ int Infix_Evaluator::eval(const std::string& expression) {
 	std::stack<int> operand_stack;
 	std::stack<std::string> operator_stack;
 	istringstream tokens(expression);
+	int expression_follower = 0;
 
 	// Remove all spaces
 	std::string no_space_expression = expression;
 	no_space_expression.erase(std::remove(no_space_expression.begin(), no_space_expression.end(), ' ' ), 
 		no_space_expression.end());
-
-	int expression_follower = 0;
 
 	return expression_evaluator(tokens, no_space_expression, operand_stack, operator_stack,
 		expression_follower);
@@ -84,12 +82,9 @@ int Infix_Evaluator::expression_evaluator(istringstream& tokens, const std::stri
 			continue;
 		}
 
-
-
-		// TODO: Make a template function for finding item in vector
 		// Check if possible double operator
 		if (std::find(std::begin(POSSIBLE_DOUBLE_OP), std::end(POSSIBLE_DOUBLE_OP), next_char) != std::end(POSSIBLE_DOUBLE_OP)) {
-			// Peak at next character in sequence
+			// Peek at next character in sequence
 			char next_next_char = expression[expression_position];
 			// If next_next_char is a digit, not a double operator, go back to top of loop
 			if (isdigit(next_next_char)) {
@@ -97,7 +92,7 @@ int Infix_Evaluator::expression_evaluator(istringstream& tokens, const std::stri
 				last_precedence = precedence_map[curr_op];
 				operator_stack.push(curr_op);
 				// If last operator same precedence as current operator, let it fall through to
-				// if statements below for correct operatrion
+				// if statements below for correct operatrion to be called
 				if (last_precedence != curr_precedence) {
 					curr_precedence = precedence_map[curr_op];
 					continue;
@@ -193,8 +188,7 @@ int Infix_Evaluator::expression_evaluator(istringstream& tokens, const std::stri
 	// Expression already solved, return answer
 	if (operand_stack.empty() && operator_stack.empty())
 		return temp_operand;
-	operand_stack.push(eval_op(operator_stack.top(), temp_operand, operand_stack));
-	return operand_stack.top();
+	return eval_op(operator_stack.top(), temp_operand, operand_stack);
 }
 
 // Evaluates the current operator
