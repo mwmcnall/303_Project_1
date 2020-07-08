@@ -30,7 +30,7 @@ int Infix_Evaluator::eval(const std::string& expression) {
 	// Check for possible errors before you even evaluate
 	try
 	{
-		error_checker.error_checking(expression);
+		error_checker.check_for_errors(expression);
 	}
 	catch (const std::exception & e)
 	{
@@ -50,12 +50,12 @@ int Infix_Evaluator::eval(const std::string& expression) {
 	no_space_expression.erase(std::remove(no_space_expression.begin(), no_space_expression.end(), ' ' ), 
 		no_space_expression.end());
 
-	return expression_evaluator(tokens, no_space_expression, operand_stack, operator_stack,
+	return eval_exp(tokens, no_space_expression, operand_stack, operator_stack,
 		expression_follower);
 }
 
 // Evaluate an infix expression, recursive function
-int Infix_Evaluator::expression_evaluator(istringstream& tokens, const std::string& expression,
+int Infix_Evaluator::eval_exp(istringstream& tokens, const std::string& expression,
 	std::stack<int> operand_stack, std::stack<std::string> operator_stack,
 	int& expression_position, int last_precedence) {
 
@@ -116,7 +116,7 @@ int Infix_Evaluator::expression_evaluator(istringstream& tokens, const std::stri
 		if (curr_precedence == -1) {
 			std::stack<int> recursive_operand_stack;
 			std::stack<std::string> recursive_operator_stack;
-			operand_stack.push(expression_evaluator(tokens, expression,
+			operand_stack.push(eval_exp(tokens, expression,
 				recursive_operand_stack, recursive_operator_stack,
 				expression_position, INITIAL_PRECEDENCE));
 		}
@@ -133,7 +133,7 @@ int Infix_Evaluator::expression_evaluator(istringstream& tokens, const std::stri
 			std::stack<std::string> recursive_operator_stack;
 			recursive_operator_stack.push(curr_op);
 
-			operand_stack.push(expression_evaluator(tokens, expression,
+			operand_stack.push(eval_exp(tokens, expression,
 				recursive_operand_stack, recursive_operator_stack,
 				expression_position, PRECEDENCE_RECURSION));
 
@@ -159,7 +159,7 @@ int Infix_Evaluator::expression_evaluator(istringstream& tokens, const std::stri
 			std::stack<std::string> recursive_operator_stack;
 			recursive_operator_stack.push(curr_op);
 
-			operand_stack.push(expression_evaluator(tokens, expression,
+			operand_stack.push(eval_exp(tokens, expression,
 				recursive_operand_stack, recursive_operator_stack,
 				expression_position, precedence_map[curr_op]));
 		}

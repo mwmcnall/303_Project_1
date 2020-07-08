@@ -50,7 +50,7 @@ private: // Variables
 private: // Methods
 
 	// Recursive expression solver
-	int expression_evaluator(istringstream& tokens, const std::string& expression,
+	int eval_exp(istringstream& tokens, const std::string& expression,
 		std::stack<int> operand_stack, std::stack<std::string> operator_stack,
 		int& expression_position, int last_precedence = INITIAL_PRECEDENCE);
 

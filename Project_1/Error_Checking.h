@@ -9,7 +9,7 @@ class Error_Checker
 {
 public:
 	Error_Checker();
-	void error_checking(const std::string& expression);
+	void check_for_errors(const std::string& expression);
 private:
 	std::regex multi_op, multi_operands, unary_binary, div_zero;
 	std::string multi_operator_regex_builder();

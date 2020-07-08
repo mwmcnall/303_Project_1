@@ -62,7 +62,7 @@ std::string Error_Checker::unary_binary_regex_builder() {
 	return regex_statement;
 }
 
-void Error_Checker::error_checking(const std::string& expression) {
+void Error_Checker::check_for_errors(const std::string& expression) {
 	// Error Checking first element of expression
 	char first = expression[0];
 	if (std::count(CLOSING_PARENS.begin(), CLOSING_PARENS.end(), first))
